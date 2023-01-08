@@ -15,7 +15,7 @@ class Player(object):
         facing_arrow = pygame.image.load("facing.png")
         moving_arrow = pygame.image.load("moving.png")
         
-        self.image = pygame.transform.scale(img, (50,50))
+        self.image = pygame.transform.scale(img, (80,80))
         self.rect = self.image.get_rect()
         
         self.facing_arrow = pygame.transform.scale(facing_arrow, (12,12))
@@ -75,8 +75,8 @@ class Player(object):
                 self.velocity[1] + impulse[1])
 
     def arrows(self, jX_data, jY_data, aX_data, aY_data):
-        self.facing_arrow_rect.center = (self.rect.centerx + self.facing_vector[0]-10,\
-            self.rect.centery + self.facing_vector[1]-10)
+        self.facing_arrow_rect.center = (self.rect.centerx + self.facing_vector[0]-7,\
+            self.rect.centery + self.facing_vector[1]-7)
         self.moving_arrow_rect.center = (self.rect.centerx + self.moving_vector[0],\
             self.rect.centery + self.moving_vector[1])
         if (jX_data < -20 or jX_data > 20) or (jY_data < -20 or jY_data > 20):
@@ -131,7 +131,7 @@ class Bullets(object):
     
     def __init__(self, direction, player_center):
         image = pygame.image.load("kiwi.png")
-        self.image = pygame.transform.scale(image, (40,40))
+        self.image = pygame.transform.scale(image, (80,80))
         self.rect = self.image.get_rect()
         self.rect.center = player_center
         self.velocity = (direction[0],direction[1])
