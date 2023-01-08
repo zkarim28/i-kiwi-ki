@@ -6,6 +6,7 @@ import pygame
 from pygame.locals import *
 import objs
 import math
+import Text
 from sys import platform
 
 #check OS, then iterate through USB ports to find arduino controller
@@ -35,47 +36,30 @@ kiwi_tick = 0
 start_menu_state = True
 in_game_state = False
 paused_state = False
-start_button_clicked = False
-pause_button_clicked = False
-resume_button_clicked = False
 
 #initialize player object
 player = objs.Player()
 player.rect.center = (width/2,height/2)
 
-#create font and text
-pygame.font.init()
-my_title_font = pygame.font.SysFont('Comic Sans MS', 75)
-my_text_font = pygame.font.SysFont('Comic Sans MS', 45)
+#createtest via text class,stores all text in dict
+titles = {}
+titles['calib'] = Text.Text(winsize, "Calibrating...", (255,255,255), "TITLE", "CENTER")
+titles['kiwi'] = Text.Text(winsize, "I-KIWI-KI", (0,0,0), "TITLE", "MIDTOP")
+titles['paused'] = Text.Text(winsize, "PAUSED", (0,0,0), "TITLE", "MIDTOP")
 
-text_surface = my_title_font.render("I-KIWI-KI", False, (0,0,0))
-text_surface_rect = text_surface.get_rect()
-text_surface_rect.midtop = (width/2,0)
+texts = {}
+texts['intro'] = Text.Text(winsize, \
+    "Snapple Cap Fact 144: Texas is the only state that permits residents to cast absentee ballots from space.", \
+        (255,255,255), "TEXT", "MIDBOTTOM")
 
-start_surface = my_title_font.render("i-kiki-ki", False, (0,0,0))
-start_surface_rect = start_surface.get_rect()
-start_surface_rect.midtop = (width/2, 0)
-
-start_button_surface = my_text_font.render("start", False, (0,0,0))
-start_button_surface_rect = start_button_surface.get_rect()
-start_button_surface_rect.midtop = (width/2, height/2)
-
-waiting_surface = my_title_font.render("Calibrating...", False, (255,255,255))
-
-pause_button_surface = my_title_font.render("Pause", False, (0,0,0))
-pause_button_surface_rect = pause_button_surface.get_rect()
-pause_button_surface_rect.topright = (width, 0)
-
-paused_surface = my_title_font.render("PAUSED", False, (0,0,0))
-paused_surface_rect = start_button_surface.get_rect()
-paused_surface_rect.midtop = (width/2, 0)
-
-resume_button_surface = my_text_font.render("RESUME", False, (0,0,0))
-resume_button_surface_rect = start_button_surface.get_rect()
-resume_button_surface_rect.center = (width/2, height/2)
+buttons = {}
+buttons['start'] = Text.Text(winsize, "START", (255,255,255), "BUTTON", "CENTER")
+buttons['pause'] = Text.Text(winsize, "PAUSE", (255,255,255), "BUTTON", "TOPLEFT")
+buttons['resume'] = Text.Text(winsize, "RESUME", (0,0,0), "BUTTON", "CENTER")
 
 #calibrates the accelerometer
-screen.blit(waiting_surface, (0,0))
+screen.blit(titles['calib'].surface, titles['calib'].rect)
+screen.blit(texts['intro'].surface, texts['intro'].rect)
 pygame.display.flip()
 player.calibration(arduino)
 
@@ -94,24 +78,24 @@ while True:
                 sys.exit()
             if event.type == MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    if mx in range(start_button_surface_rect.left, \
-                        start_button_surface_rect.right) and \
-                        my in range(start_button_surface_rect.top, \
-                        start_button_surface_rect.bottom):
-                        start_button_clicked = True
+                    if mx in range(buttons['start'].rect.left, \
+                        buttons['start'].rect.right) and \
+                        my in range(buttons['start'].rect.top, \
+                        buttons['start'].rect.bottom):
+                        buttons['start'].clicked = True
 
         screen.fill(bck_color)
-        screen.blit(start_button_surface, start_button_surface_rect)
-        screen.blit(start_surface, start_surface_rect)
+        screen.blit(buttons['start'].surface, buttons['start'].rect)
+        screen.blit(titles['kiwi'].surface, titles['kiwi'].rect)
         pygame.display.flip()
-        if start_button_clicked == True:
+        if buttons['start'].clicked == True:
             start_menu_state = False
             in_game_state = True
             break
 
     while in_game_state == True:
         
-        pause_button_clicked = False
+        buttons['pause'].clicked = False
         mx, my = pygame.mouse.get_pos()
 
         for event in pygame.event.get():
@@ -119,11 +103,11 @@ while True:
                 sys.exit()
             if event.type == MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    if mx in range(pause_button_surface_rect.left, \
-                        pause_button_surface_rect.right) and \
-                        my in range(pause_button_surface_rect.top, \
-                        pause_button_surface_rect.bottom):
-                        pause_button_clicked = True
+                    if mx in range(buttons['pause'].rect.left, \
+                        buttons['pause'].rect.right) and \
+                        my in range(buttons['pause'].rect.top, \
+                        buttons['pause'].rect.bottom):
+                        buttons['pause'].clicked = True
 
         data = arduino.readline().decode(errors="ignore")
         name_count = 0
@@ -157,18 +141,21 @@ while True:
                     kiwi.movement(winsize)
 
         screen.fill(bck_color)
-        screen.blit(text_surface, text_surface_rect)
+        screen.blit(titles['kiwi'].surface, titles['kiwi'].rect)
         screen.blit(player.facing_arrow, player.facing_arrow_rect.center)
         for kiwi in thrown:
-            screen.blit(kiwi.image, kiwi.rect.center)
+            screen.blit(kiwi.image, \
+            (kiwi.rect.centerx - int(kiwi.image.get_width() / 2), \
+            kiwi.rect.centery - int(kiwi.image.get_height() / 2)))
         screen.blit(player.moving_arrow, player.moving_arrow_rect.center)
         screen.blit(player.image, \
             (player.rect.centerx - int(player.image.get_width() / 2), \
             player.rect.centery - int(player.image.get_height() / 2)))
-        screen.blit(pause_button_surface, pause_button_surface_rect)
+        screen.blit(buttons['pause'].surface, buttons['pause'].rect)
         pygame.display.flip()
+
         kiwi_tick += 1
-        if pause_button_clicked == True:
+        if buttons['pause'].clicked == True:
             in_game_state = False
             start_menu_state = False
             paused_state = True
@@ -176,7 +163,7 @@ while True:
 
     while paused_state == True:
 
-        resume_button_clicked = False
+        buttons['resume'].clicked = False
         mx, my = pygame.mouse.get_pos()
 
         for event in pygame.event.get():
@@ -184,17 +171,17 @@ while True:
                 sys.exit()
             if event.type == MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    if mx in range(resume_button_surface_rect.left, \
-                        resume_button_surface_rect.right) and \
-                        my in range(resume_button_surface_rect.top, \
-                        resume_button_surface_rect.bottom):
-                        resume_button_clicked = True   
+                    if mx in range(buttons['resume'].rect.left, \
+                        buttons['resume'].rect.right) and \
+                        my in range(buttons['resume'].rect.top, \
+                        buttons['resume'].rect.bottom):
+                        buttons['resume'].clicked = True   
 
         screen.fill(pause_color)
-        screen.blit(paused_surface, paused_surface_rect)
-        screen.blit(resume_button_surface, resume_button_surface_rect)
+        screen.blit(titles['paused'].surface, titles['paused'].rect)
+        screen.blit(buttons['resume'].surface, buttons['resume'].rect)
         pygame.display.flip()
-        if resume_button_clicked == True:
+        if buttons['resume'].clicked == True:
             paused_state = False
             in_game_state = True
             break
