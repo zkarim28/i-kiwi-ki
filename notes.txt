@@ -1,15 +1,5 @@
 make new object classes and more collisions updates
-make a pause menu where you can calibrate the gyroscope
-use the joystick to controll the whole game?
-but first implement with mouse 
 
-i cannot keep creating these buttons and text surfaces
-manually, i need to make a texts class
-- include the state of being clicked, make on for buttons, 
-  titles, and regular text. or make a keyword that determines
-  what types of text to create 
+implement sound effects
 
-player live updates very fast to accomdate for past movement
-while in pause state. The issue here is that python buffers
-up every single line that has passed since the last line
-read to catch up to the most recent one. find a fix
+implement collisions and object deletions
