@@ -37,6 +37,8 @@ class Player(object):
         self.thrown = []
         self.kiwi_tick = 0
 
+        self.lives = 0
+
     def movement(self, winsize, aX_data, aY_data):
         """
         monitors sensor input and determines speed of object at that instant
@@ -98,7 +100,7 @@ class Player(object):
 
             self.moving_ang = (math.atan2(-y,x))
             norm = math.sqrt(math.pow(x,2)+math.pow(y,2))/5000
-            self.moving_vector = ((math.cos(self.moving_ang)*50)*norm,\
+            self.moving_vector = (math.cos(self.moving_ang)*50*norm,\
                 math.sin(self.moving_ang)*50*norm)
         else:
             self.moving_vector = (0,0)
@@ -107,7 +109,7 @@ class Player(object):
         data_name_list = ['X','Y','R','P','A','B']
         xsum = 0
         ysum = 0
-        total_num = 100
+        total_num = 250
         for i in range(total_num):
             while True:
                 data = arduino.readline().decode(errors="ignore")
@@ -129,9 +131,9 @@ class Player(object):
 
 class Bullets(object):
     
-    def __init__(self, direction, player_center):
-        image = pygame.image.load("kiwi.png")
-        self.image = pygame.transform.scale(image, (80,80))
+    def __init__(self, direction, player_center, img):
+        image = pygame.image.load(img)
+        self.image = pygame.transform.scale(image, (70,70))
         self.rect = self.image.get_rect()
         self.rect.center = player_center
         self.velocity = (direction[0],direction[1])
@@ -161,3 +163,57 @@ class Bullets(object):
         if self.rect.left < 0 or self.rect.right > winsize[0] or \
             self.rect.top < 0 or self.rect.bottom > winsize[1]:
             self.end = True
+
+
+class Pawn(object):
+
+    def __init__(self, loc):
+        
+        img = pygame.image.load("enemy.png")
+
+        self.image = pygame.transform.scale(img, (60,60))
+        self.rect = self.image.get_rect()
+        self.rect.center = (loc[0],loc[1])
+        self.health = 3
+
+        self.facing_vector = (0,0)
+
+    def facePlayer(self, player):
+
+        vector = (player.rect.x-self.rect.x, \
+            player.rect.y - self.rect.y)
+        norm = math.sqrt(math.pow(player.rect.x-self.rect.x,2)\
+            +math.pow(player.rect.y - self.rect.y,2))
+
+        self.facing_vector = ((vector[0]/norm)*50, \
+            (vector[1]/norm)*50) 
+
+
+class Knight(object):
+
+    def __init__(self, loc):
+        
+        img = pygame.image.load("apple.png")
+
+        self.image = pygame.transform.scale(img, (60,60))
+        self.rect = self.image.get_rect()
+        self.rect.center = (loc[0],loc[1])
+        self.health = 3
+
+        self.facing_vector = (0,0)
+
+    def facePlayer(self, player):
+
+        vector = (player.rect.x-self.rect.x, \
+            player.rect.y - self.rect.y)
+        norm = math.sqrt(math.pow(player.rect.x-self.rect.x,2)\
+            +math.pow(player.rect.y - self.rect.y,2))
+        if norm == 0:
+            norm = 1
+        self.facing_vector = ((vector[0]/norm)*2, (vector[1]/norm)*2) 
+    
+    def movement(self):
+
+        self.rect.centerx = self.rect.centerx + self.facing_vector[0]
+        self.rect.centery = self.rect.centery + self.facing_vector[1]
+        self.rect = self.rect.move(self.facing_vector[0], self.facing_vector[1])
