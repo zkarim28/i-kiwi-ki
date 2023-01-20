@@ -4,7 +4,7 @@ class Text(object):
 
     pygame.font.init()
     TITLE = pygame.font.SysFont("Arial", 75, bold = True)
-    TEXT = pygame.font.SysFont("Arial", 45)
+    TEXT = pygame.font.SysFont("Arial", 40)
     BUTTON = pygame.font.SysFont("Arial", 60, italic = True)
 
     def __init__(self, winsize, text, color, style, loc, starting = None, coord = (0,0)):
@@ -86,3 +86,54 @@ class Text(object):
                 self.rect.midleft = (coord[0], coord[1])
             elif starting == "CENTER":
                 self.rect.center = (coord[0], coord[1])
+
+
+class InputBox:
+
+    COLOR_INACTIVE = pygame.Color('lightskyblue3')
+    COLOR_ACTIVE = pygame.Color('dodgerblue2')
+    FONT = pygame.font.Font(None, 50)
+
+    def __init__(self, x, y, w, h, text=''):
+        self.rect = pygame.Rect(x, y, w, h)
+        self.rect.center = (x,y)
+        self.color = (255,255,255)
+        self.text = text
+        self.txt_surface = InputBox.FONT.render(text, True, self.color)
+        self.active = False
+        self.name = 0
+        self.done = False
+
+    def handle_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            # If the user clicked on the input_box rect.
+            if self.rect.collidepoint(event.pos):
+                # Toggle the active variable.
+                self.active = not self.active
+            else:
+                self.active = False
+            # Change the current color of the input box.
+            self.color = InputBox.COLOR_ACTIVE if self.active else InputBox.COLOR_INACTIVE
+        if event.type == pygame.KEYDOWN:
+            if self.active:
+                if event.key == pygame.K_RETURN:
+                    self.name = self.text
+                    self.text = ''
+                    self.done = True
+                elif event.key == pygame.K_BACKSPACE:
+                    self.text = self.text[:-1]
+                else:
+                    self.text += event.unicode
+                # Re-render the text.
+                self.txt_surface = InputBox.FONT.render(self.text, True, self.color)
+
+    def update(self):
+        # Resize the box if the text is too long.
+        width = max(200, self.txt_surface.get_width()+10)
+        self.rect.w = width
+
+    def draw(self, screen):
+        # Blit the text.
+        screen.blit(self.txt_surface, (self.rect.x+5, self.rect.y+5))
+        # Blit the rect.
+        pygame.draw.rect(screen, self.color, self.rect, 2)

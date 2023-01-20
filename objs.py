@@ -1,10 +1,12 @@
 import pygame
 import math
+import random
 
 class Player(object):
 
     JSTH = 200
     ACTH = 1000
+    MOVE_RATE = 0.25
     
     def __init__(self):
         '''
@@ -37,7 +39,7 @@ class Player(object):
         self.thrown = []
         self.kiwi_tick = 0
 
-        self.lives = 0
+        self.lives = 5
 
     def movement(self, winsize, aX_data, aY_data):
         """
@@ -72,7 +74,7 @@ class Player(object):
         self.rect = self.rect.move(self.velocity[0], self.velocity[1])
         if (aX_data < self.axcal-Player.ACTH or aX_data > self.axcal+Player.ACTH)or\
             (aY_data < self.aycal-Player.ACTH or aY_data > self.aycal+Player.ACTH):
-            impulse = (self.move_vector[0] * 0.17, self.move_vector[1] * 0.17)
+            impulse = (self.move_vector[0] * Player.MOVE_RATE, self.move_vector[1] * Player.MOVE_RATE)
             self.velocity = (self.velocity[0] + impulse[0], \
                 self.velocity[1] + impulse[1])
 
@@ -83,8 +85,8 @@ class Player(object):
             self.rect.centery + self.moving_vector[1])
         if (jX_data < -20 or jX_data > 20) or (jY_data < -20 or jY_data > 20):
             self.facing_ang = math.atan2(-jY_data,jX_data)
-            self.facing_vector = (math.cos(self.facing_ang)*50,\
-                math.sin(self.facing_ang)*50)
+            self.facing_vector = (math.cos(self.facing_ang)*65,\
+                math.sin(self.facing_ang)*65)
         if (aX_data < self.axcal-1000 or aX_data > self.axcal+1000) or \
             (aY_data < self.aycal-1000 or aY_data > self.aycal+1000):
             
@@ -128,6 +130,13 @@ class Player(object):
         self.axcal = xsum/total_num
         self.aycal = ysum/total_num
 
+    def collision(self, enemy_list):
+        for enemy in enemy_list:
+            if pygame.Rect.colliderect(self.rect, enemy.rect):
+                enemy_list.remove(enemy)
+                self.hit = True
+                self.lives -=1       
+
 
 class Bullets(object):
     
@@ -138,6 +147,7 @@ class Bullets(object):
         self.rect.center = player_center
         self.velocity = (direction[0],direction[1])
         self.impulse = (-direction[0]/12, -direction[1]/12)
+        self.hit = False
         self.end = False
     
     def movement(self, winsize):
@@ -163,20 +173,30 @@ class Bullets(object):
         if self.rect.left < 0 or self.rect.right > winsize[0] or \
             self.rect.top < 0 or self.rect.bottom > winsize[1]:
             self.end = True
+            
+    def collision(self, kiwi_list):
+        for kiwi in kiwi_list:
+            if pygame.Rect.colliderect(self.rect, kiwi.rect):
+                kiwi_list.remove(kiwi)
+                self.hit = True
 
 
 class Pawn(object):
 
+    WIDTH = 70
+    HEIGHT = 70
+
     def __init__(self, loc):
         
-        img = pygame.image.load("enemy.png")
+        img = pygame.image.load("pinapple.png")
 
-        self.image = pygame.transform.scale(img, (60,60))
+        self.image = pygame.transform.scale(img, (Pawn.WIDTH, Pawn.HEIGHT))
         self.rect = self.image.get_rect()
         self.rect.center = (loc[0],loc[1])
-        self.health = 3
-
+        self.health = 1
+        self.hit = False
         self.facing_vector = (0,0)
+        self.fireRate = random.randrange(25, 60)
 
     def facePlayer(self, player):
 
@@ -187,18 +207,29 @@ class Pawn(object):
 
         self.facing_vector = ((vector[0]/norm)*50, \
             (vector[1]/norm)*50) 
-
-
+    
+    def collision(self, kiwi_list):
+        
+        for kiwi in kiwi_list:
+            if pygame.Rect.colliderect(self.rect, kiwi.rect):
+                kiwi_list.remove(kiwi)
+                self.hit = True
+            
+                        
 class Knight(object):
 
+    WIDTH = 60
+    HEIGHT = 60
+    
     def __init__(self, loc):
         
         img = pygame.image.load("apple.png")
 
-        self.image = pygame.transform.scale(img, (60,60))
+        self.image = pygame.transform.scale(img, (Knight.WIDTH, Knight.HEIGHT))
         self.rect = self.image.get_rect()
         self.rect.center = (loc[0],loc[1])
         self.health = 3
+        self.hit = False
 
         self.facing_vector = (0,0)
 
@@ -217,3 +248,10 @@ class Knight(object):
         self.rect.centerx = self.rect.centerx + self.facing_vector[0]
         self.rect.centery = self.rect.centery + self.facing_vector[1]
         self.rect = self.rect.move(self.facing_vector[0], self.facing_vector[1])
+    
+    def collision(self, kiwi_list):
+        
+        for kiwi in kiwi_list:
+            if pygame.Rect.colliderect(self.rect, kiwi.rect):
+                kiwi_list.remove(kiwi)
+                self.hit = True

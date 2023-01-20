@@ -1,5 +1,6 @@
-make new object classes and more collisions updates
-
-implement sound effects
-
-implement collisions and object deletions
+- implement sound effects
+- key and move controlls
+    - wasd move, space shoot, mouse aim
+- live update of high scores live updating in game
+- choose the modes, changing amt of lives spawn rate etc
+- make sure enemies don't spawn onto player

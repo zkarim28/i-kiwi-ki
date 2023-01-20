@@ -82,3 +82,29 @@
             # norm = math.sqrt(math.pow(aX_data,2)+math.pow(aY_data,2))/5000
             # self.moving_vector = ((math.cos(self.moving_ang)*50)*norm,\
             #   math.sin(self.moving_ang)*50*norm)
+
+    #My first attempt at sorting, but there's a sorting method anyway
+    # first_max = data_lines[1]
+    # for line in data_lines[1:]:
+    #     if int(line[1]) > int(first_max[1]):
+    #         first_max = line
+
+    # second_max = data_lines[1]
+    # for line in data_lines[1:]:
+    #     if int(line[1]) <= int(first_max[1]) and int(line[1]) > int(second_max[1]):
+    #         second_max = line
+
+    # third_max = data_lines[1]
+    # for line in data_lines[1:]:
+    #     if int(line[1]) <= int(second_max[1]) and int(line[1]) > int(third_max[1]):
+    #         third_max = line 
+
+    # fourth_max = data_lines[1]
+    # for line in data_lines[1:]:
+    #     if int(line[1]) <= int(third_max[1]) and int(line[1]) > int(fourth_max[1]):
+    #         fourth_max = line 
+            
+    # fifth_max = data_lines[1]
+    # for line in data_lines[1:]:
+    #     if int(line[1]) <= int(fourth_max[1]) and int(line[1]) > int(fifth_max[1]):
+    #         fifth_max = line 
