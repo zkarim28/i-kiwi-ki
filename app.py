@@ -17,7 +17,7 @@ def start():
     
     #initializes general game variables
     data_name_list = ['X','Y','R','P','A','B']
-    winsize = width, height = (1920, 960)
+    winsize = width, height = (1680, 936)
     screen = pygame.display.set_mode(winsize)
     bck_color = (50, 150, 75)
     pause_color = (211,211,211)
@@ -29,6 +29,7 @@ def start():
     starfruit_tick = 1
     pawn_tick = 1
     knight_tick = 1
+    sound_tick = 1
     pawn_spawn_rate = random.randint(50,100)
     knight_spawn_rate = random.randint(50,100)
     start_menu_state = False
@@ -136,6 +137,15 @@ def start():
         texts['lb5'] = Text.Text(winsize, f"{topSix[-5]}", (0,0,0), "TEXT", "CUSTOM", "CENTER", (width/2, 320))
         texts['lb6'] = Text.Text(winsize, f"{topSix[-6]}", (0,0,0), "TEXT", "CUSTOM", "CENTER", (width/2, 375))
         leaderboard_read.close()
+    
+    #Music/sounds
+    pygame.mixer.init()
+    music = pygame.mixer.music.load('music.ogg')
+    shoot_sound = pygame.mixer.Sound("shoot1.ogg")
+    hurt_sound = pygame.mixer.Sound("splat.ogg")
+    death_sound = pygame.mixer.Sound("death.ogg")
+    kill_sound = pygame.mixer.Sound("mushy.ogg")
+    pygame.mixer.music.play(-1)
 
     #game loop
     while True:
@@ -258,6 +268,7 @@ def start():
                 pawn.collision(kiwi_thrown)
                 if pawn.hit == True:
                     pawns.remove(pawn)
+                    kill_sound.play()
                     score+=10
             
             #check for knight-kiwi collisions
@@ -265,6 +276,7 @@ def start():
                 knight.collision(kiwi_thrown)
                 if knight.hit == True:
                     knights.remove(knight)
+                    kill_sound.play()
                     score+=5
             
             #check for starfruit-kiwi collisions        
@@ -272,12 +284,13 @@ def start():
                 starfruit.collision(kiwi_thrown)
                 if starfruit.hit == True:
                     starfruit_thrown.remove(starfruit)
+                    kill_sound.play()
                     score+=1
             
             #check for pawn-player collisions
-            player.collision(pawns)
-            player.collision(knights)
-            player.collision(starfruit_thrown)
+            player.collision(pawns, hurt_sound)
+            player.collision(knights, hurt_sound)
+            player.collision(starfruit_thrown, hurt_sound)
             
             #check for macOS exit or pause button click
             for event in pygame.event.get():
@@ -316,6 +329,7 @@ def start():
                     kiwi = objs.Bullets(in_place_vector, in_place_center, "kiwi.png")
                     kiwi_thrown.append(kiwi)
                     kiwi_tick = 0
+                    shoot_sound.play()
 
             #pawns shoot starfruit at a random fireRate between 20 and 50
             for pawn in pawns:
@@ -406,9 +420,11 @@ def start():
             starfruit_tick += 1
             pawn_tick += 1
             knight_tick += 1
+            sound_tick += 1
 
             #life check
             if player.lives <= 0:
+                death_sound.play()
                 in_game_state = False
                 in_end_game_state = True
                 break

@@ -130,12 +130,13 @@ class Player(object):
         self.axcal = xsum/total_num
         self.aycal = ysum/total_num
 
-    def collision(self, enemy_list):
+    def collision(self, enemy_list, hurt_sound):
         for enemy in enemy_list:
             if pygame.Rect.colliderect(self.rect, enemy.rect):
                 enemy_list.remove(enemy)
                 self.hit = True
-                self.lives -=1       
+                self.lives -=1 
+                hurt_sound.play()      
 
 
 class Bullets(object):
