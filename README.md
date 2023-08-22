@@ -1,5 +1,8 @@
 # i-kiwi-ki
 Pygame x Arduino project. a game where you throw kiwis at enemies to make your way to the end. Will you survive?
+
+Link to YouTube video of Gameplay: https://youtu.be/97u1vZnhICI
+
 ![image](https://user-images.githubusercontent.com/65046727/211455166-6cb84478-d783-4e9d-90a5-8ff686f2b160.png)
 ![image](https://user-images.githubusercontent.com/65046727/211455213-c1809476-5104-45a2-affe-74b7484f54e9.png)
 ![image](https://user-images.githubusercontent.com/65046727/211455404-ddf3d9b2-9153-4ed9-9207-5bffaa8dd661.png)
