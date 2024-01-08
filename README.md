@@ -1,10 +1,20 @@
 # i-kiwi-ki
-Pygame x Arduino project. a game where you throw kiwis at enemies to make your way to the end. Will you survive?
+Pygame x Arduino project. a game survival where you throw kiwis at enemies to make your way to the end. Will you survive?
 
 Link to YouTube video of Gameplay: https://youtu.be/97u1vZnhICI
-![IMG_0996](https://user-images.githubusercontent.com/65046727/212480389-f19d0891-0f14-4917-9b3d-b640e98bb7ec.jpg)
-Custom Controller creating using an Arduino Mega 2560
-![image](https://user-images.githubusercontent.com/65046727/211455166-6cb84478-d783-4e9d-90a5-8ff686f2b160.png)
-![image](https://user-images.githubusercontent.com/65046727/211455213-c1809476-5104-45a2-affe-74b7484f54e9.png)
-![image](https://user-images.githubusercontent.com/65046727/211455404-ddf3d9b2-9153-4ed9-9207-5bffaa8dd661.png)
-![image](https://user-images.githubusercontent.com/65046727/211455429-d2b5b199-e65b-4b34-a7e8-f0731e2731bd.png)
+
+
+Custom Controller creating using an Arduino Mega 2560:
+![IMG_6530](https://github.com/zkarim28/i-kiwi-ki/assets/65046727/da22a922-7e25-4040-ab38-a45467f9e65f)
+
+Gameplay:
+<img width="1676" alt="IMG_9538" src="https://github.com/zkarim28/i-kiwi-ki/assets/65046727/5fd487a3-0d9a-4b8d-9248-de22c8ecfd13">
+
+Leaderboard:
+<img width="1677" alt="IMG_9138" src="https://github.com/zkarim28/i-kiwi-ki/assets/65046727/0a4ca2e6-c23c-4eef-80d1-fcabbb7be1ae">
+
+Calibration:
+<img width="1677" alt="IMG_0382" src="https://github.com/zkarim28/i-kiwi-ki/assets/65046727/8165c19f-55a9-4c35-b899-78c9efb1c8b5">
+
+Paused:
+<img width="1671" alt="IMG_6442" src="https://github.com/zkarim28/i-kiwi-ki/assets/65046727/f1927f3c-aebe-4ffe-8eed-cab947544c2d">
